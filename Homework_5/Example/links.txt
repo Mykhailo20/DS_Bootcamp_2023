@@ -1,0 +1,2 @@
+link to the dataset: https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv
+link to the tutorial: https://machinelearningmastery.com/tutorial-first-neural-network-python-keras/
