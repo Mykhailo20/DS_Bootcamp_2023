@@ -30,31 +30,7 @@ def main():
         if st.checkbox("Display the results of frequency stabilization"):
             display_results.show_freq_stability(df_arg=df, column_name_arg='time')
     with st.expander("Data Filtering"):
-        if st.checkbox("Display raw data"):
-            st.pyplot(data_filtering.get_three_axes_graph(df=df,
-                                                          x='time',
-                                                          y=['accX', 'accY', 'accZ'],
-                                                          title='Time Dependence of Linear Acceleration (Raw Data)',
-                                                          x_label='Time, s',
-                                                          y_label='Linear acceleration, m/s^2'))
-            st.pyplot(data_filtering.get_three_axes_graph(df=df,
-                                                          x='time',
-                                                          y=['gyrX', 'gyrY', 'gyrZ'],
-                                                          title='Time Dependence of Angular Velocity (Raw Data)',
-                                                          x_label='Time, s',
-                                                          y_label='Angular velocity, rad/s'))
-        st.pyplot(data_filtering.get_three_axes_graph(df=df,
-                                                      x='time',
-                                                      y=['accX_filtered', 'accY_filtered', 'accZ_filtered'],
-                                                      title='Time Dependence of Linear Acceleration (Filtered Data)',
-                                                      x_label='Time, s',
-                                                      y_label='Linear acceleration, m/s^2'))
-        st.pyplot(data_filtering.get_three_axes_graph(df=df,
-                                                      x='time',
-                                                      y=['gyrX_filtered', 'gyrY_filtered', 'gyrZ_filtered'],
-                                                      title='Time Dependence of Angular Velocity (Filtered Data)',
-                                                      x_label='Time, s',
-                                                      y_label='Angular velocity, rad/s'))
+        display_results.show_filtering_results(df_arg=df)
 
 
 if __name__ == '__main__':
