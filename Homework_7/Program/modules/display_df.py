@@ -14,10 +14,11 @@ def set_page_config(page_title_arg, layout_arg):
     st.set_page_config(page_title=page_title_arg, layout=layout_arg)
 
 
-def display_gen_df_info(df_arg):
+def display_gen_df_info(df_arg, title_arg="##### DataFrame Info"):
     """Function to display general information about the df_arg dataframe on the Streamlit page: df_arg.head() and
     df_arg.info()
-    :param df_arg: df_arg - dataframe, information about which should be displayed
+    :param df_arg: dataframe, information about which should be displayed
+    :param title_arg: title that will be placed above the dataframe information
     :return:  None
     """
     st.dataframe(df_arg.head(), use_container_width=True)
@@ -30,13 +31,14 @@ def display_gen_df_info(df_arg):
         df_arg.info()
 
     # Display the captured information
-    st.write("##### DataFrame Info")
+    st.write(title_arg)
     st.code(info_output.getvalue())
 
 
-def display_df_info(df_arg):
+def display_df_info(df_arg, title_arg="##### DataFrame Info"):
     """Function to display df.info() on a Streamlit page
-    :param df_arg: df_arg - dataframe, information about which should be displayed
+    :param df_arg: dataframe, information about which should be displayed
+    :param title_arg: title that will be placed above the dataframe information
     :return: None
     """
     # Capture the info() output as a string
@@ -46,5 +48,5 @@ def display_df_info(df_arg):
         df_arg.info()
 
     # Display the captured information
-    st.write("##### DataFrame Info")
+    st.write(title_arg)
     st.code(info_output.getvalue())

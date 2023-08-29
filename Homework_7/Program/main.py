@@ -1,10 +1,7 @@
 import streamlit as st
 
-from modules import get_data
-from modules import display_df
-from modules import display_results
-from modules import frequency_stability
-from modules import data_filtering
+from modules import get_data, display_df, display_results, frequency_stability, data_filtering, \
+    exploratory_data_analysis
 
 
 def main():
@@ -21,6 +18,26 @@ def main():
                                       filter_columns_arg=['accX', 'accY', 'accZ', 'gyrX', 'gyrY', 'gyrZ'],
                                       window_size_arg=10)
 
+    # Exploratory Data Analysis
+    df = df[df['activity'] != 'No activity']
+
+    # Perform undersampling to get a balanced dataframe
+    df = exploratory_data_analysis.get_undersampled_df(df_arg=df, column_name_arg='activity')
+
+    # Build a correlation matrix and remove certain axes of the accelerometer or gyroscope
+    sel_columns = ['accX_filtered', 'accY_filtered', 'accZ_filtered', 'gyrX_filtered', 'gyrY_filtered',
+                   'gyrZ_filtered']
+
+    # Calculate the correlation matrix for the selected columns
+    corr_matrix = df[sel_columns].corr()
+    important_columns = ['accX_filtered', 'accY_filtered', 'accZ_filtered']
+    discard_columns = exploratory_data_analysis.get_discard_columns(corr_matrix_arg=corr_matrix,
+                                                                    important_columns_arg=important_columns,
+                                                                    df_arg=df)
+    sel_columns = [col for col in sel_columns if col not in discard_columns]
+    sel_columns.append('activity')
+    filtered_df = df[['time'] + sel_columns].copy()
+
     # Display results on the Streamlit page
     with st.expander("General information"):
         display_df.display_gen_df_info(df_arg=df)
@@ -31,6 +48,13 @@ def main():
             display_results.show_freq_stability(df_arg=df, column_name_arg='time')
     with st.expander("Data Filtering"):
         display_results.show_filtering_results(df_arg=df)
+    with st.expander("Exploratory Data Analysis"):
+        activity_counts = df['activity'].value_counts()
+        st.write(activity_counts)
+        if st.checkbox("View correlation matrix"):
+            st.pyplot(exploratory_data_analysis.get_correlation_matrix(corr_matrix_df_arg=corr_matrix))
+            st.write(f"discard_columns = {discard_columns}")
+        display_df.display_df_info(df_arg=filtered_df, title_arg="##### filtered_df info")
 
 
 if __name__ == '__main__':
