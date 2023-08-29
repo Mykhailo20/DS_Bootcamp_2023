@@ -18,26 +18,23 @@ def show_freq_info(df_arg, column_name_arg):
             f"{frequency_stability.get_avg_frequency(df_arg, column_name_arg):.3f} Hz")
 
 
-def show_freq_stability(time_measurement_df_arg, df_arg, avg_period_arg):
+def show_freq_stability(df_arg, column_name_arg='time'):
     """Function for displaying the results of the 'Exploring measurement period and frequency stability' stage
-    :param time_measurement_df_arg: a dataframe that contains information about the measurement period
     :param df_arg: the original dataframe, which contains all the necessary information
-    :param avg_period_arg: average data collection period
+    :param column_name_arg: the name of the column that contains information about the time of the measurements
+    (e.g., the 'time' column)
     :return: None
     """
-    st.write("##### time_measurement_df")
-    display_df.display_gen_df_info(df_arg=time_measurement_df_arg)
-    st.pyplot(frequency_stability.get_stability_graph(time_measurement_df_arg=time_measurement_df_arg,
-                                                      column_name_arg='measurement_time',
+    st.write("##### Exploring measurement period and frequency stability")
+    time_diffs = df_arg[column_name_arg].diff()
+    avg_period = time_diffs.mean()
+    st.pyplot(frequency_stability.get_stability_graph(time_diffs.values,
                                                       title=f"Stability of Data Collection (Raw Data)\nAverage "
                                                             f"frequency: "
-                                                            f"{1.0 / avg_period_arg:.3f} Hz"))
+                                                            f"{1.0 / avg_period:.3f} Hz"))
     display_df.display_df_info(df_arg)
-    st.pyplot(frequency_stability.get_stability_graph(time_measurement_df_arg=
-                                                      time_measurement_df_arg[time_measurement_df_arg['measurement_time']
-                                                                              <= avg_period_arg * 1.5],
-                                                      column_name_arg='measurement_time',
+    st.pyplot(frequency_stability.get_stability_graph(time_diffs.values[time_diffs.values <= avg_period * 1.5],
                                                       zoom_near_origin=False,
                                                       title=f"Stability of Data Collection (Filtered Data)\n"
                                                             f"Average frequency: "
-                                                            f"{1.0 / avg_period_arg:.3f} Hz"))
+                                                            f"{1.0 / avg_period:.3f} Hz"))

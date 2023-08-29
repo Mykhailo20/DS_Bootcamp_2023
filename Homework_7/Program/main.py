@@ -13,7 +13,6 @@ def main():
     df = get_data.read_from_file(filename=streamlit_train_df_filename)
 
     # Exploring measurement period and frequency stability
-    time_measurement_df = frequency_stability.get_measurement_time_df(df)
     avg_period = frequency_stability.get_avg_period(df, 'time')
     df = df[df['time'].diff() <= avg_period * 1.5]
 
@@ -24,7 +23,7 @@ def main():
         if st.checkbox("Display general information"):
             display_results.show_freq_info(df_arg=df, column_name_arg='time')
         if st.checkbox("Display the results of frequency stabilization"):
-            display_results.show_freq_stability(time_measurement_df, df, avg_period)
+            display_results.show_freq_stability(df_arg=df, column_name_arg='time')
 
 
 if __name__ == '__main__':
