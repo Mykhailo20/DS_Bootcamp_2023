@@ -8,6 +8,7 @@ def read_from_file(filename):
     :param filename: The filename for the training dataset
     :return: A dataset read from a file
     """
-    print('read_from_file')
     df_local = pd.read_csv(filename)
     return df_local
+
+
