@@ -1,5 +1,3 @@
-import pandas as pd
-import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -23,34 +21,6 @@ def get_avg_frequency(df_arg, column_name_arg):
         """
     time_diffs = df_arg[column_name_arg].diff()
     return 1.0 / time_diffs.mean()
-
-
-@st.cache_data
-def get_measurement_time_df(df_arg, column_name_arg='time'):
-    """ A function for building a dataframe that contains information about the time of measurement of each reading of the device
-    Args:
-        1) df - a dataframe that contains a time column
-        2) column_name - the name of the column containing time data (in seconds)
-    Returns:
-        time_measurement_df - dataframe that contains information about the time of measurement of each reading of the device
-    """
-    period_dict = {'start_time': [], 'end_time': [], 'measurement_time': []}
-    prev_time = None
-    curr_time = None
-    for index, row in df_arg.iterrows():
-        if index == len(df_arg):
-            break
-
-        prev_time = curr_time
-        curr_time = row[column_name_arg]
-
-        if prev_time != None:
-            period_dict['start_time'].append(prev_time)
-            period_dict['end_time'].append(curr_time)
-            period_dict['measurement_time'].append(curr_time - prev_time)
-
-    time_measurement_df = pd.DataFrame.from_dict(period_dict)
-    return time_measurement_df
 
 
 def get_stability_graph(time_diffs_arg, zoom_near_origin=True, title=None):

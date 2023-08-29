@@ -32,9 +32,9 @@ def show_freq_stability(df_arg, column_name_arg='time'):
                                                       title=f"Stability of Data Collection (Raw Data)\nAverage "
                                                             f"frequency: "
                                                             f"{1.0 / avg_period:.3f} Hz"))
-    display_df.display_df_info(df_arg)
     st.pyplot(frequency_stability.get_stability_graph(time_diffs.values[time_diffs.values <= avg_period * 1.5],
                                                       zoom_near_origin=False,
                                                       title=f"Stability of Data Collection (Filtered Data)\n"
                                                             f"Average frequency: "
                                                             f"{1.0 / avg_period:.3f} Hz"))
+
