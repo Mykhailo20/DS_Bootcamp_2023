@@ -3,7 +3,7 @@ from scipy import stats
 import streamlit as st
 
 from modules import get_data, display_df, display_results, frequency_stability, data_filtering, \
-    exploratory_data_analysis, windowing, feature_engineering
+    exploratory_data_analysis, windowing, feature_engineering, model_training
 
 
 def perform_feature_engineering(df_arg):
@@ -73,6 +73,12 @@ def main():
     # Feature Engineering
     windowed_df = perform_feature_engineering(df_arg=windowed_df)
 
+    # Model training
+    # Convert string labels to int
+    activity_dict = {'Squat': 0, 'Leg land': 1, 'Walk': 2, 'Lateral squat slide': 3, 'Jogging': 4}
+    windowed_df['activity_number'] = windowed_df['activity'].apply(lambda x: activity_dict[x])
+
+    X_train, y_train, X_valid, y_valid = model_training.split_train_data(train_df_arg=windowed_df)
     # Display results on the Streamlit page
     with st.expander("General information"):
         display_df.display_gen_df_info(df_arg=df)
@@ -93,6 +99,22 @@ def main():
                                            second_chart_title="Windowed DataFrame"))
     with st.expander("Feature Engineering"):
         display_df.display_df_info(df_arg=windowed_df, title_arg="##### features_df info")
+    with st.expander("Model Training"):
+        display_df.display_df_info(df_arg=X_train, title_arg="##### X_train info")
+        st.write(f"len(y_train) = {len(y_train)}")
+        st.write(f"y_train[:5] = {y_train[:5]}")
+        display_df.display_df_info(df_arg=X_valid, title_arg="##### X_valid info")
+        st.write(f"y_valid[:5] = {y_valid[:5]}")
+
+        train_df = X_train.copy()
+        train_df['activity_number'] = y_train
+
+        valid_df = X_valid.copy()
+        valid_df['activity_number'] = y_valid
+
+        st.pyplot(windowing.get_pie_charts(first_df=train_df, second_df=valid_df, column='activity_number',
+                                           first_chart_title='Train_df class label distribution',
+                                           second_chart_title='Validation_df class label distribution'))
 
 
 if __name__ == '__main__':
