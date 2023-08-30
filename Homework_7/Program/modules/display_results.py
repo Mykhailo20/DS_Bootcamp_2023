@@ -3,7 +3,7 @@ import streamlit as st
 from modules import display_df
 from modules import frequency_stability
 from modules import data_filtering
-from modules import exploratory_data_analysis
+from modules import exploratory_data_analysis, windowing
 
 
 def show_freq_info(df_arg, column_name_arg):
@@ -87,3 +87,21 @@ def show_data_analysis_results(df_arg, corr_matrix_arg, discard_columns_arg):
         st.pyplot(exploratory_data_analysis.get_correlation_matrix(corr_matrix_df_arg=corr_matrix_arg))
         st.write(f"discard_columns = {discard_columns_arg}")
     display_df.display_df_info(df_arg=df_arg, title_arg="##### filtered_df info")
+
+
+def show_train_spliting_results(X_train_arg, y_train_arg, X_valid_arg, y_valid_arg):
+    display_df.display_df_info(df_arg=X_train_arg, title_arg="##### X_train info")
+    st.write(f"len(y_train) = {len(y_train_arg)}")
+    st.write(f"y_train[:5] = {y_train_arg[:5]}")
+    display_df.display_df_info(df_arg=X_valid_arg, title_arg="##### X_valid info")
+    st.write(f"y_valid[:5] = {y_valid_arg[:5]}")
+
+    train_df = X_train_arg.copy()
+    train_df['activity_number'] = y_train_arg
+
+    valid_df = X_valid_arg.copy()
+    valid_df['activity_number'] = y_valid_arg
+
+    st.pyplot(windowing.get_pie_charts(first_df=train_df, second_df=valid_df, column='activity_number',
+                                       first_chart_title='Train_df class label distribution',
+                                       second_chart_title='Validation_df class label distribution'))

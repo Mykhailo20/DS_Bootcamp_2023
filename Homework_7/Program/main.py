@@ -100,21 +100,8 @@ def main():
     with st.expander("Feature Engineering"):
         display_df.display_df_info(df_arg=windowed_df, title_arg="##### features_df info")
     with st.expander("Model Training"):
-        display_df.display_df_info(df_arg=X_train, title_arg="##### X_train info")
-        st.write(f"len(y_train) = {len(y_train)}")
-        st.write(f"y_train[:5] = {y_train[:5]}")
-        display_df.display_df_info(df_arg=X_valid, title_arg="##### X_valid info")
-        st.write(f"y_valid[:5] = {y_valid[:5]}")
-
-        train_df = X_train.copy()
-        train_df['activity_number'] = y_train
-
-        valid_df = X_valid.copy()
-        valid_df['activity_number'] = y_valid
-
-        st.pyplot(windowing.get_pie_charts(first_df=train_df, second_df=valid_df, column='activity_number',
-                                           first_chart_title='Train_df class label distribution',
-                                           second_chart_title='Validation_df class label distribution'))
+        display_results.show_train_spliting_results(X_train_arg=X_train, y_train_arg=y_train,
+                                                    X_valid_arg=X_valid, y_valid_arg=y_valid)
 
 
 if __name__ == '__main__':
