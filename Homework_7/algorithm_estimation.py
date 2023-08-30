@@ -1,9 +1,8 @@
 import time
+import pandas as pd
 from memory_profiler import profile, memory_usage
 
-import streamlit as st
-
-from modules import get_data, frequency_stability, data_filtering, exploratory_data_analysis, windowing, pipeline
+from modules import frequency_stability, data_filtering, exploratory_data_analysis, windowing, pipeline
 
 
 def perform_pipeline(df_arg):
@@ -114,28 +113,27 @@ def get_memory_usage(df_arg):
 
 
 def main():
-    df = get_data.read_from_file('data/Train/Train_activities_1_2023-08-23.csv')
+    df = pd.read_csv('data/Train/Train_activities_1_2023-08-23.csv')
     number_of_experiments = 5
 
     # Investigate pipeline execution time
     time_list = []
     for i in range(number_of_experiments):
-        time_list.append(get_time_usage(df_arg=df))
+        temp_time = get_time_usage(df_arg=df)
+        time_list.append(temp_time)
+        print(f"{i+1}) time = {temp_time:0.3f} seconds")
+    print(f"average execution time = {sum(time_list) / len(time_list): .3f} seconds")
 
     # Investigate pipeline memory usage
     memory_list = []
     for i in range(number_of_experiments):
-        memory_list.append(get_memory_usage(df_arg=df))
+        temp_memory = get_memory_usage(df_arg=df)
+        memory_list.append(temp_memory)
+        print(f"Memory used: {temp_memory:.3f} MiB")
 
-    # Show results on the Streamlit page
-    with st.expander("Time usage"):
-        for i in range(len(time_list)):
-            st.write(f"{i+1}) execution time = {time_list[0]: .3f} seconds")
-        st.write(f"average execution time = {sum(time_list) / len(time_list): .3f} seconds")
-    with st.expander("Memory usage"):
-        for i in range(len(memory_list)):
-            st.write(f"Memory used: {memory_list[i]:.3f} MiB")
-        st.write(f"average memory usage = {sum(memory_list) / len(memory_list): .3f} MiB")
+    for i in range(len(memory_list)):
+        print(f"{i+1}) Memory used: {memory_list[i]:.3f} MiB")
+    print(f"average memory usage = {sum(memory_list) / len(memory_list): .3f} MiB")
 
 
 if __name__ == "__main__":

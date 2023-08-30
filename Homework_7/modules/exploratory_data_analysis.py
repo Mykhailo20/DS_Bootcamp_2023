@@ -1,10 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import streamlit as st
 
 
-@st.cache_data
 def get_undersampled_df(df_arg, column_name_arg):
     # First, calculate the minimum number of samples across all classes
     min_samples = df_arg[column_name_arg].value_counts().min()
