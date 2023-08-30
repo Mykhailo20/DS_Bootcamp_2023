@@ -14,9 +14,10 @@ def main():
     df = df[df['time'].diff() <= frequency_stability.get_avg_period(df, 'time') * 1.5]
 
     # Data Filtering
-    data_filtering.median_filter_data(df_arg=df,
-                                      filter_columns_arg=['accX', 'accY', 'accZ', 'gyrX', 'gyrY', 'gyrZ'],
-                                      window_size_arg=10)
+    df[['accX_filtered', 'accY_filtered', 'accZ_filtered', 'gyrX_filtered', 'gyrY_filtered', 'gyrZ_filtered']] \
+        = data_filtering.median_filter_data(df_arg=df,
+                                            filter_columns_arg=['accX', 'accY', 'accZ', 'gyrX', 'gyrY', 'gyrZ'],
+                                            window_size_arg=10)
 
     # Exploratory Data Analysis
     df = df[df['activity'] != 'No activity']

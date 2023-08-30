@@ -1,3 +1,4 @@
+import pandas as pd
 import matplotlib.pyplot as plt
 
 
@@ -42,11 +43,13 @@ def median_filter_data(df_arg, filter_columns_arg, window_size_arg):
     :param df_arg: the dataframe whose column contents you want to filter
     :param filter_columns_arg: a list of columns whose contents should be filtered
     :param window_size_arg: window size for the median filter
-    :return: None
+    :return: a dataframe that contains the filtered column values
     """
+    df = pd.DataFrame()
     for column in filter_columns_arg:
         # Apply median filtering to column data
-        df_arg[f'{column}_filtered'] = df_arg[column].rolling(window=window_size_arg, center=True, min_periods=1).median()
+        df[f'{column}_filtered'] = df_arg[column].rolling(window=window_size_arg, center=True, min_periods=1).median()
+    return df
 
 
 def get_raw_filtered_data_zoom_graph(df, x, y, x_lims, y_lims, title=None, x_label=None, y_label=None, filename=None, zoom_axes=None):
