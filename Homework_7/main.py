@@ -79,6 +79,7 @@ def main():
     windowed_df['activity_number'] = windowed_df['activity'].apply(lambda x: activity_dict[x])
 
     X_train, y_train, X_valid, y_valid = model_training.split_train_data(train_df_arg=windowed_df)
+
     # Display results on the Streamlit page
     with st.expander("General information"):
         display_df.display_gen_df_info(df_arg=df)
