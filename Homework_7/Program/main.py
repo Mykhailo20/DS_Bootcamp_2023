@@ -1,7 +1,7 @@
 import streamlit as st
 
 from modules import get_data, display_df, display_results, frequency_stability, data_filtering, \
-    exploratory_data_analysis
+    exploratory_data_analysis, windowing
 
 
 def main():
@@ -39,6 +39,9 @@ def main():
     sel_columns.append('activity')
     filtered_df = df[['time'] + sel_columns].copy()
 
+    # Windowing
+    windowed_df = windowing.get_windowed_df(df_arg=filtered_df, window_duration_arg=2)
+
     # Display results on the Streamlit page
     with st.expander("General information"):
         display_df.display_gen_df_info(df_arg=df)
@@ -53,6 +56,11 @@ def main():
         display_results.show_data_analysis_results(df_arg=filtered_df,
                                                    corr_matrix_arg=corr_matrix,
                                                    discard_columns_arg=discard_columns)
+    with st.expander("Data Transformation"):
+        display_df.display_df_info(df_arg=windowed_df, title_arg="##### windowed_df info")
+        st.pyplot(windowing.get_pie_charts(first_df=filtered_df, second_df=windowed_df, column='activity',
+                                           first_chart_title="Filtered DataFrame",
+                                           second_chart_title="Windowed DataFrame"))
 
 
 if __name__ == '__main__':
