@@ -50,12 +50,9 @@ def main():
     with st.expander("Data Filtering"):
         display_results.show_filtering_results(df_arg=df)
     with st.expander("Exploratory Data Analysis"):
-        activity_counts = df['activity'].value_counts()
-        st.write(activity_counts)
-        if st.checkbox("View correlation matrix"):
-            st.pyplot(exploratory_data_analysis.get_correlation_matrix(corr_matrix_df_arg=corr_matrix))
-            st.write(f"discard_columns = {discard_columns}")
-        display_df.display_df_info(df_arg=filtered_df, title_arg="##### filtered_df info")
+        display_results.show_data_analysis_results(df_arg=filtered_df,
+                                                   corr_matrix_arg=corr_matrix,
+                                                   discard_columns_arg=discard_columns)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,9 @@
 import streamlit as st
 
+from modules import display_df
 from modules import frequency_stability
 from modules import data_filtering
+from modules import exploratory_data_analysis
 
 
 def show_freq_info(df_arg, column_name_arg):
@@ -76,3 +78,12 @@ def show_filtering_results(df_arg):
                                                                   title='Accelerometer OX: Raw vs Filtered',
                                                                   zoom_axes=[0.18, 0.18, 0.15, 0.15]
                                                                   ))
+
+
+def show_data_analysis_results(df_arg, corr_matrix_arg, discard_columns_arg):
+    activity_counts = df_arg['activity'].value_counts()
+    st.write(activity_counts)
+    if st.checkbox("View correlation matrix"):
+        st.pyplot(exploratory_data_analysis.get_correlation_matrix(corr_matrix_df_arg=corr_matrix_arg))
+        st.write(f"discard_columns = {discard_columns_arg}")
+    display_df.display_df_info(df_arg=df_arg, title_arg="##### filtered_df info")
