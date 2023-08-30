@@ -1,7 +1,35 @@
+import numpy as np
+from scipy import stats
 import streamlit as st
 
 from modules import get_data, display_df, display_results, frequency_stability, data_filtering, \
-    exploratory_data_analysis, windowing
+    exploratory_data_analysis, windowing, feature_engineering
+
+
+def perform_feature_engineering(df_arg):
+    y_train = df_arg['activity'].values
+    functions_list = [
+        lambda x: x.mean(),  # mean
+        lambda x: x.std(),  # std deviation
+        lambda x: np.mean(np.absolute(x - np.mean(x))),  # avg absolute diff
+        lambda x: x.min(),  # min
+        lambda x: x.max(),  # max
+        lambda x: x.max() - x.min(),  # range = max-min diff
+        lambda x: np.median(x),  # median
+        lambda x: np.percentile(x, 75) - np.percentile(x, 25),  # interquartile range
+        lambda x: np.sum(x < 0),  # negative count
+        lambda x: np.sum(x > 0),  # positive count
+        lambda x: stats.skew(x),  # skewness = assymetry
+        lambda x: stats.kurtosis(x)  # kurtosis
+    ]
+    result_columns = ['mean', 'std', 'aad', 'min', 'max', 'range', 'median', 'iqr', 'neg_count', 'pos_count',
+                      'assymetry', 'kurtosis']
+    df_arg = feature_engineering.get_statistical_measures_df(windowed_data_df=df_arg,
+                                                             functions=functions_list,
+                                                             data_df_columns=['accX', 'accY', 'accZ', 'gyrZ'],
+                                                             result_df_columns=result_columns)
+    df_arg['activity'] = y_train
+    return df_arg
 
 
 def main():
@@ -42,6 +70,9 @@ def main():
     # Windowing
     windowed_df = windowing.get_windowed_df(df_arg=filtered_df, window_duration_arg=2)
 
+    # Feature Engineering
+    windowed_df = perform_feature_engineering(df_arg=windowed_df)
+
     # Display results on the Streamlit page
     with st.expander("General information"):
         display_df.display_gen_df_info(df_arg=df)
@@ -57,10 +88,11 @@ def main():
                                                    corr_matrix_arg=corr_matrix,
                                                    discard_columns_arg=discard_columns)
     with st.expander("Data Transformation"):
-        display_df.display_df_info(df_arg=windowed_df, title_arg="##### windowed_df info")
         st.pyplot(windowing.get_pie_charts(first_df=filtered_df, second_df=windowed_df, column='activity',
                                            first_chart_title="Filtered DataFrame",
                                            second_chart_title="Windowed DataFrame"))
+    with st.expander("Feature Engineering"):
+        display_df.display_df_info(df_arg=windowed_df, title_arg="##### features_df info")
 
 
 if __name__ == '__main__':
