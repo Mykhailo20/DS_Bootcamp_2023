@@ -92,10 +92,10 @@ def show_data_analysis_results(df_arg, corr_matrix_arg, discard_columns_arg):
 def show_train_spliting_results(X_train_arg, y_train_arg, X_valid_arg, y_valid_arg):
     display_df.display_df_info(df_arg=X_train_arg, title_arg="##### X_train info")
     st.write(f"len(y_train) = {len(y_train_arg)}")
-    st.write(f"y_train[:5] = {y_train_arg[:5]}")
+
     display_df.display_df_info(df_arg=X_valid_arg, title_arg="##### X_valid info")
     st.write(f"len(y_valid) = {len(y_valid_arg)}")
-    st.write(f"y_valid[:5] = {y_valid_arg[:5]}")
+
 
     train_df = X_train_arg.copy()
     train_df['activity_number'] = y_train_arg

@@ -2,6 +2,8 @@ import numpy as np
 from scipy import stats
 import streamlit as st
 
+from sklearn.preprocessing import StandardScaler
+
 from modules import get_data, display_df, display_results, frequency_stability, data_filtering, \
     exploratory_data_analysis, windowing, feature_engineering, model_training
 
@@ -30,6 +32,21 @@ def perform_feature_engineering(df_arg):
                                                              result_df_columns=result_columns)
     df_arg['activity'] = y_train
     return df_arg
+
+
+def model_training_data_preparation(df_arg):
+    # Convert string labels to int
+    activity_dict = {'Squat': 0, 'Leg land': 1, 'Walk': 2, 'Lateral squat slide': 3, 'Jogging': 4}
+    df_arg['activity_number'] = df_arg['activity'].apply(lambda x: activity_dict[x])
+
+    X_train, y_train, X_valid, y_valid = model_training.split_train_data(train_df_arg=df_arg)
+    y_train = model_training.prepare_target_features(y_arg=y_train, one_hot_encoding=True)
+    y_valid = model_training.prepare_target_features(y_arg=y_valid, one_hot_encoding=True)
+    # Scale feature vectors
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_valid = scaler.transform(X_valid)
+    return X_train, y_train, X_valid, y_valid
 
 
 def main():
@@ -74,11 +91,7 @@ def main():
     windowed_df = perform_feature_engineering(df_arg=windowed_df)
 
     # Model training
-    # Convert string labels to int
-    activity_dict = {'Squat': 0, 'Leg land': 1, 'Walk': 2, 'Lateral squat slide': 3, 'Jogging': 4}
-    windowed_df['activity_number'] = windowed_df['activity'].apply(lambda x: activity_dict[x])
-
-    X_train, y_train, X_valid, y_valid = model_training.split_train_data(train_df_arg=windowed_df)
+    X_train, y_train, X_valid, y_valid = model_training_data_preparation(df_arg=windowed_df)
 
     # Display results on the Streamlit page
     with st.expander("General information"):
@@ -101,8 +114,14 @@ def main():
     with st.expander("Feature Engineering"):
         display_df.display_df_info(df_arg=windowed_df, title_arg="##### features_df info")
     with st.expander("Model Training"):
-        display_results.show_train_spliting_results(X_train_arg=X_train, y_train_arg=y_train,
-                                                    X_valid_arg=X_valid, y_valid_arg=y_valid)
+        st.write(f"X_train[0] = {X_train[0]}")
+        st.write(f"y_train[0] = {y_train[0]}")
+
+        st.write(f"len(X_train) = {len(X_train)}")
+        st.write(f"len(y_train) = {len(y_train)}")
+        
+        st.write(f"len(X_valid) = {len(X_valid)}")
+        st.write(f"len(y_valid) = {len(y_valid)}")
 
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 
+from keras.utils import to_categorical
+
 
 def split_train_data(train_df_arg, training_part=0.8):
     X_train = pd.DataFrame()
@@ -35,5 +37,5 @@ def prepare_target_features(y_arg, one_hot_encoding):
     y_arg = np.array(y_arg)
     if one_hot_encoding:
         # Convert Label Encoded target data to one-hot encoded format
-        y_arg_encoded = to_categorical(y_arg)
-
+        y_arg = to_categorical(y_arg)
+    return y_arg
