@@ -49,6 +49,7 @@ def main():
     X_train, y_train, X_valid, y_valid = pipeline.model_training_data_preparation(df_arg=windowed_df)
 
     # Display results on the Streamlit page
+    st.subheader("Running a pipeline on training data")
     with st.expander("General information"):
         display_df.display_gen_df_info(df_arg=df)
     with st.expander("Exploring measurement period and frequency stability"):
@@ -64,11 +65,12 @@ def main():
                                                    discard_columns_arg=discard_columns)
     with st.expander("Data Transformation"):
         st.pyplot(windowing.get_pie_charts(first_df=filtered_df, second_df=windowed_df, column='activity',
-                                           first_chart_title="Filtered DataFrame",
+                                           first_chart_title="Original DataFrame",
                                            second_chart_title="Windowed DataFrame"))
     with st.expander("Feature Engineering"):
         display_df.display_df_info(df_arg=windowed_df, title_arg="##### features_df info")
-    with st.expander("Model Training"):
+        st.info(f"Number of features = {len(windowed_df.columns) - 2}")
+    with st.expander("Data Preparation for Model Training"):
         st.write(f"X_train[0] = {X_train[0]}")
         st.write(f"y_train[0] = {y_train[0]}")
 

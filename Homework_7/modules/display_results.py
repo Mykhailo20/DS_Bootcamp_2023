@@ -81,6 +81,7 @@ def show_filtering_results(df_arg):
 
 
 def show_data_analysis_results(df_arg, corr_matrix_arg, discard_columns_arg):
+    st.info("Results of undersampling")
     activity_counts = df_arg['activity'].value_counts()
     st.write(activity_counts)
     if st.checkbox("View correlation matrix"):

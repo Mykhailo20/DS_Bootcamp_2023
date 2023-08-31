@@ -119,7 +119,7 @@ def main():
     # Investigate pipeline execution time
     time_list = []
     for i in range(number_of_experiments):
-        temp_time = get_time_usage(df_arg=df)
+        temp_time = get_time_usage(df_arg=df.copy())
         time_list.append(temp_time)
         print(f"{i+1}) time = {temp_time:0.3f} seconds")
     print(f"average execution time = {sum(time_list) / len(time_list): .3f} seconds")
@@ -127,7 +127,7 @@ def main():
     # Investigate pipeline memory usage
     memory_list = []
     for i in range(number_of_experiments):
-        temp_memory = get_memory_usage(df_arg=df)
+        temp_memory = get_memory_usage(df_arg=df.copy())
         memory_list.append(temp_memory)
         print(f"Memory used: {temp_memory:.3f} MiB")
 
