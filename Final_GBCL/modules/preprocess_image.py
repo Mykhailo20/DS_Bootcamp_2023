@@ -6,7 +6,7 @@ import cv2
 
 
 def get_plt_image(img, title=None):
-    """ Function to display an image
+    """ Function to get a plt.figure that displays an array-like image
     Args:
         1) img - image array-like object
         2) title - the title that will be displayed above the image
@@ -17,6 +17,29 @@ def get_plt_image(img, title=None):
     ax.imshow(img)
     ax.set_title(title)
     ax.axis('off')
+    return fig
+
+
+def get_plt_images(images, titles=None, figsize=(12, 4)):
+    """ Function to get a plt.figure that displays array-like images in a row
+        Args:
+            1) images - the list of array-like images
+            2) titles - the list of titles that will be displayed above the images (len(titles) == len(images))
+            3) figsize - the size (width, height) of each image
+        Returns:
+            plt.figure object
+        """
+    fig, axes = plt.subplots(1, len(images), figsize=figsize)
+    if titles is not None:
+        for i in range(len(images)):
+            axes[i].imshow(images[i])
+            axes[i].set_title(titles[i])
+            axes[i].axis('off')
+    else:
+        for i in range(len(images)):
+            axes[i].imshow(images[i])
+            axes[i].axis('off')
+
     return fig
 
 
