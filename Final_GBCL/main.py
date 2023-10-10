@@ -63,7 +63,8 @@ def main():
     garbage_classification_model = load_nn_model(model_filepath=
                                                  'models/6_resnet152_garbage_classification_6_classes_model.h5')
     target_size = (224, 224)
-
+    classes_path = 'images/classes_images'
+    class_labels = os.listdir(path=classes_path)
     # Streamlit
     st.header("Online Garbage Classifier")
 
@@ -71,11 +72,15 @@ def main():
     if uploaded_file is not None:
         pil_image = Image.open(uploaded_file)
         image_array = np.array(pil_image)
-        img, x = preprocess_image.preprocess_resnet_image(img=image_array)
+        img, x = preprocess_image.preprocess_resnet_image(img=image_array, target_size=target_size)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         plt_img = preprocess_image.get_plt_images(images=[image_array, img],
                                                   titles=["Uploaded Image", "Preprocessed Image"])
         st.pyplot(plt_img)
+
+        predictions, predicted_class_index = nn_model.classify_image(model=garbage_classification_model, image=x)
+        st.write(f"Predicted class: {class_labels[predicted_class_index]}")
+        st.write(f"Confidence: {predictions.max():.2f}")
 
     images_path = 'images/classes_images'
     if st.checkbox("Display examples of garbage images for each class"):

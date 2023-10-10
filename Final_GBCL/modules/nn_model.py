@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 import os
 
@@ -22,3 +23,16 @@ def get_nn_model(model_filepath):
         return nn_model
     except Exception as e:
         print(f"Error occurred while loading the model: {str(e)}")
+
+
+def classify_image(model, image):
+    """ Function for image classification using a neural network model
+    Args:
+        1) model - the model that will perform the classification
+        2) image - an image that has been previously prepared for a model and needs to be classified
+    Returns:
+
+    """
+    predictions = model.predict(image)
+    predicted_class_index = np.argmax(predictions)
+    return predictions, predicted_class_index
