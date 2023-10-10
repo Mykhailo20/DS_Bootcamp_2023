@@ -68,23 +68,26 @@ def main():
     target_size = (224, 224)
     classes_path = 'images/classes_images'
     class_labels = os.listdir(path=classes_path)
+
     # Streamlit
     st.header("Online Garbage Classifier")
 
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
-        if st.checkbox("Display uploaded file"):
-            st.image(uploaded_file, width=300, caption="Uploaded Image")
+        st.image(uploaded_file, width=300, caption="Uploaded Image")
 
         pil_image = Image.open(uploaded_file)
         image_array = np.array(pil_image)
         _, x = preprocess_image.preprocess_resnet_image(img=image_array, target_size=target_size)
 
         predictions, predicted_class_index = nn_model.classify_image(model=garbage_classification_model, image=x)
-        st.write(f"Predicted class: {class_labels[predicted_class_index]}")
-        st.write(f"Confidence: {predictions.max():.2f}")
+        col1, col2, col3 = st.columns([0.38, 0.35, 0.27])
+        with col2:
+            st.subheader(f"Predicted class: {class_labels[predicted_class_index]}")
+            st.subheader(f"Confidence: {predictions.max():.2f}")
 
     images_path = 'images/classes_images'
+    st.markdown('<hr class="above-hr">', unsafe_allow_html=True)
     if st.checkbox("Display examples of garbage images for each class"):
         classes_images_dict = get_classes_images(images_path=images_path)
         for garbage_class_name in classes_images_dict.keys():

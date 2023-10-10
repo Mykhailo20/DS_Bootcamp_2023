@@ -2,3 +2,18 @@
 .st-emotion-cache-1kyxreq {
     justify-content: center;
 }
+
+hr {
+    height: 1px;
+    border: none;
+    color: rgb(51, 51, 51);
+    background-color: rgb(51, 51, 51);
+}
+
+.above-hr {
+    margin-bottom: 5px;
+}
+
+.below-hr {
+    margin-top: 5px;
+}
