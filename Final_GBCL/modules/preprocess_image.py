@@ -1,6 +1,23 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 from tensorflow.keras.applications.resnet50 import preprocess_input
 import cv2
+
+
+def get_plt_image(img, title=None):
+    """ Function to display an image
+    Args:
+        1) img - image array-like object
+        2) title - the title that will be displayed above the image
+    Returns:
+        plt.figure object
+    """
+    fig, ax = plt.subplots()
+    ax.imshow(img)
+    ax.set_title(title)
+    ax.axis('off')
+    return fig
 
 
 def preprocess_resnet_image(image_path, target_size=(224, 224)):
