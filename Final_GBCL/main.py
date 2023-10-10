@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from PIL import Image
 
 import cv2
 
@@ -8,14 +9,7 @@ import os
 import streamlit as st
 
 from modules import preprocess_image
-
-
-def configure_tensorflow():
-    """ Function to configure tensorflow for use in an application
-    Returns:
-         None
-    """
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+from modules import nn_model
 
 
 def configure_streamlit(layout="centered"):
@@ -26,6 +20,18 @@ def configure_streamlit(layout="centered"):
         None
     """
     st.set_page_config(layout=layout)
+
+
+@st.cache_resource
+def load_nn_model(model_filepath):
+    """ Function for loading a neural network model
+        Args:
+            1) model_filepath: model file path (including HDF5 file name)
+        Returns:
+            nn_model
+    """
+    model = nn_model.get_nn_model(model_filepath=model_filepath)
+    return model
 
 
 @st.cache_data
@@ -51,20 +57,37 @@ def get_classes_images(images_path):
     return class_images_dict
 
 
-if __name__ == '__main__':
-    # configure_tensorflow()
+def main():
     configure_streamlit(layout="wide")
-    st.header("Online Garbage Classifier")
-    images_path = 'images/classes_images'
+    nn_model.configure_tensorflow()
+    garbage_classification_model = load_nn_model(model_filepath=
+                                                 'models/6_resnet152_garbage_classification_6_classes_model.h5')
     target_size = (224, 224)
 
-    test_folders = os.listdir(images_path)
+    # Streamlit
+    st.header("Online Garbage Classifier")
+
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    if uploaded_file is not None:
+        pil_image = Image.open(uploaded_file)
+        image_array = np.array(pil_image)
+        img, x = preprocess_image.preprocess_resnet_image(img=image_array)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        plt_img = preprocess_image.get_plt_images(images=[image_array, img],
+                                                  titles=["Uploaded Image", "Preprocessed Image"])
+        st.pyplot(plt_img)
+
+    images_path = 'images/classes_images'
     if st.checkbox("Display examples of garbage images for each class"):
         classes_images_dict = get_classes_images(images_path=images_path)
         for garbage_class_name in classes_images_dict.keys():
             with st.expander(garbage_class_name):
                 plt_images = preprocess_image.get_plt_images(images=classes_images_dict[garbage_class_name])
                 st.pyplot(plt_images)
+
+
+if __name__ == '__main__':
+    main()
 
 
 
