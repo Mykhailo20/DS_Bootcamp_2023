@@ -12,7 +12,7 @@ from modules import preprocess_image
 from modules import nn_model
 
 
-def configure_streamlit(layout="centered"):
+def configure_streamlit(layout="centered", css_filepath=None):
     """ Function to customize the appearance of the Streamlit page
     Args:
         1) layout - the layout parameter of the st.set_page_config method
@@ -20,6 +20,9 @@ def configure_streamlit(layout="centered"):
         None
     """
     st.set_page_config(layout=layout)
+    if css_filepath is not None:
+        with open(css_filepath) as file:
+            st.markdown(f'<style>{file.read()}</style>', unsafe_allow_html=True)
 
 
 @st.cache_resource
@@ -58,7 +61,7 @@ def get_classes_images(images_path):
 
 
 def main():
-    configure_streamlit(layout="wide")
+    configure_streamlit(layout="wide", css_filepath='styles/styles.css')
     nn_model.configure_tensorflow()
     garbage_classification_model = load_nn_model(model_filepath=
                                                  'models/6_resnet152_garbage_classification_6_classes_model.h5')
@@ -70,13 +73,12 @@ def main():
 
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     if uploaded_file is not None:
+        if st.checkbox("Display uploaded file"):
+            st.image(uploaded_file, width=300, caption="Uploaded Image")
+
         pil_image = Image.open(uploaded_file)
         image_array = np.array(pil_image)
-        img, x = preprocess_image.preprocess_resnet_image(img=image_array, target_size=target_size)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        plt_img = preprocess_image.get_plt_images(images=[image_array, img],
-                                                  titles=["Uploaded Image", "Preprocessed Image"])
-        st.pyplot(plt_img)
+        _, x = preprocess_image.preprocess_resnet_image(img=image_array, target_size=target_size)
 
         predictions, predicted_class_index = nn_model.classify_image(model=garbage_classification_model, image=x)
         st.write(f"Predicted class: {class_labels[predicted_class_index]}")
