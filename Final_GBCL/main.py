@@ -78,6 +78,7 @@ def main():
 
         pil_image = Image.open(uploaded_file)
         image_array = np.array(pil_image)
+
         _, x = preprocess_image.preprocess_resnet_image(img=image_array, target_size=target_size)
 
         predictions, predicted_class_index = nn_model.classify_image(model=garbage_classification_model, image=x)
