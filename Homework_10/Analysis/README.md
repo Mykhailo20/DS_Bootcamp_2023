@@ -6,6 +6,7 @@ Algorithm for localization of license plates on images of cars, which uses:
 
 ## :open_file_folder: Project Files Description
 This project includes 2 Jupyter Notebook files and 1 directory as follows:
+
 **Jupyter Notebook files**:
 1. **LP_Alignment.ipynb** - Contains the license plate image alignment function code and its test results.
 2. **Select_Data.ipynb** - Contains helping functions and the code of the implemented algorithm.
