@@ -31,7 +31,10 @@ def classify_image(model, image):
         1) model - the model that will perform the classification
         2) image - an image that has been previously prepared for a model and needs to be classified
     Returns:
-
+        Tuple containing:
+        1) predictions - probabilities of the image belonging to a certain target class
+        2) predicted_class_index - index of the target class to which this image belongs according to the model's
+        prediction results
     """
     predictions = model.predict(image)
     predicted_class_index = np.argmax(predictions)
