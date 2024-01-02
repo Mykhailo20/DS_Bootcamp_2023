@@ -27,11 +27,11 @@ For more detailed information about CNN model training and the project, you can 
 
 ## :inbox_tray: Installation
 1. Download and Extract:
-   1. Download the [zip file](https://drive.google.com/drive/u/0/folders/1tnMkm3FkGGosZ4rT0YzcQPmARRe07Oz9) of the project folder.
-   2. Extract the contents to your desired location.
+   * Download the [zip file](https://drive.google.com/drive/u/0/folders/1tnMkm3FkGGosZ4rT0YzcQPmARRe07Oz9) of the project folder.
+   * Extract the contents to your desired location.
 2. Create a Virtual Environment: 
-   1. Open a terminal at the project level.
-   2. Run the following commands to create and activate a virtual environment:
+   * Open a terminal at the project level.
+   * Run the following commands to create and activate a virtual environment:
    
       ```python
       python -m venv venv
@@ -51,3 +51,16 @@ Run the command:
 ```
 streamlit run main.py
 ```
+
+## :computer: Functionality Overview
+1. Classification of user-uploaded garbage image:
+
+<p align='center'>
+   <img src='images\assets\classification.gif' alt='classification' width='900'>
+</p>
+
+2. Viewing the classic representatives of each garbage class:
+
+<p align='center'>
+   <img src='images\assets\view_representatives.gif' alt='representatives' width='900'>
+</p>
